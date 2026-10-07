@@ -1,0 +1,2840 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>EL JUEGO ES PARA TODOS</title>
+
+ <link rel="icon" type="image/png" href="imagenes/Emblema Two.gif">
+
+<style>
+
+/* =========================================================
+   CONFIGURACIÓN GENERAL
+========================================================= */
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+html,body{
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+    background:#111;
+}
+
+/* =========================================================
+   PANTALLA DE INICIO
+========================================================= */
+
+#inicio{
+    position:fixed;
+    inset:0;
+    z-index:5000;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    background:
+        radial-gradient(circle at 50% 20%,#633b91 0%,transparent 35%),
+        linear-gradient(135deg,#090512,#25103e,#090512);
+
+    color:white;
+
+    animation:entradaInicio 1s ease;
+}
+
+.menuInicio{
+    width:min(92%,800px);
+    text-align:center;
+    padding:35px;
+
+    background:rgba(12,8,25,.82);
+    border:1px solid rgba(255,255,255,.15);
+    border-radius:25px;
+
+    box-shadow:
+        0 0 60px rgba(180,100,220,.25),
+        inset 0 0 30px rgba(255,255,255,.03);
+
+    backdrop-filter:blur(12px);
+}
+
+.menuInicio h1{
+    font-size:clamp(35px,6vw,65px);
+    margin-bottom:15px;
+}
+
+.menuInicio h2{
+    color:#d59aff;
+    margin-bottom:20px;
+}
+
+.menuInicio p{
+    font-size:18px;
+    line-height:1.6;
+    color:#ddd;
+}
+
+/* =========================================================
+   SELECTOR DE PERSONAJES
+========================================================= */
+
+#selectorPersonaje{
+    margin:25px auto;
+}
+
+#personajes{
+    display:flex;
+    justify-content:center;
+    gap:18px;
+    flex-wrap:wrap;
+    margin-top:20px;
+}
+
+.personajeOpcion{
+    width:125px;
+    padding:15px 10px;
+    border-radius:15px;
+    cursor:pointer;
+
+    background:rgba(255,255,255,.06);
+    border:2px solid transparent;
+
+    transition:.25s;
+}
+
+.personajeOpcion:hover{
+    transform:translateY(-5px);
+    background:rgba(255,255,255,.12);
+}
+
+.personajeOpcion.seleccionado{
+    border-color:#c878f2;
+    box-shadow:0 0 20px rgba(200,120,242,.45);
+}
+
+.personajeOpcion p{
+    font-size:14px;
+    margin-top:10px;
+}
+
+/* =========================================================
+   PERSONAJE PREVISUALIZACIÓN
+========================================================= */
+
+.personaje{
+    position:relative;
+    width:60px;
+    height:95px;
+}
+
+.cabeza{
+    position:absolute;
+    width:42px;
+    height:42px;
+    left:9px;
+    top:0;
+
+    border-radius:50%;
+    border:3px solid #171717;
+}
+
+.cabello{
+    position:absolute;
+    width:44px;
+    height:18px;
+    left:8px;
+    top:-2px;
+
+    border-radius:25px 25px 5px 5px;
+}
+
+.cuerpo{
+    position:absolute;
+    width:38px;
+    height:36px;
+    left:11px;
+    top:40px;
+
+    border-radius:8px;
+    border:3px solid #171717;
+}
+
+.brazo{
+    position:absolute;
+    width:11px;
+    height:30px;
+    top:43px;
+
+    border-radius:8px;
+    background:inherit;
+}
+
+.brazo.izq{
+    left:2px;
+    transform:rotate(10deg);
+}
+
+.brazo.der{
+    right:2px;
+    transform:rotate(-10deg);
+}
+
+.pierna{
+    position:absolute;
+    width:13px;
+    height:25px;
+    top:73px;
+
+    background:#222;
+    border-radius:5px;
+}
+
+.pierna.izq{
+    left:12px;
+}
+
+.pierna.der{
+    right:12px;
+}
+
+/* =========================================================
+   JUEGO
+========================================================= */
+
+#juego{
+    position:fixed;
+    inset:0;
+    display:none;
+    overflow:hidden;
+
+    transition:background 1s ease;
+}
+
+/* =========================================================
+   HUD
+========================================================= */
+
+#hud{
+    position:fixed;
+    top:15px;
+    left:15px;
+    right:15px;
+
+    z-index:1000;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    pointer-events:none;
+}
+
+.hudCaja{
+    padding:10px 16px;
+
+    background:rgba(0,0,0,.65);
+    color:white;
+
+    border-radius:12px;
+    border:1px solid rgba(255,255,255,.2);
+
+    font-weight:bold;
+}
+
+#barraVida{
+    width:120px;
+    height:12px;
+    margin-top:5px;
+
+    background:#333;
+    border-radius:20px;
+    overflow:hidden;
+}
+
+#vida{
+    width:100%;
+    height:100%;
+    background:#43d17c;
+    transition:.3s;
+}
+
+/* =========================================================
+   MUNDO
+========================================================= */
+
+#mundo{
+    position:absolute;
+
+    left:0;
+    top:0;
+
+    width:6000px;
+    height:100%;
+
+    transition:left .05s linear;
+}
+
+/* =========================================================
+   ESCENARIO URBANO
+========================================================= */
+
+.ciudad{
+    position:absolute;
+    inset:0;
+    width:6000px;
+    height:100%;
+
+    overflow:hidden;
+    pointer-events:none;
+}
+
+/* Cielo */
+
+.cielo{
+    position:absolute;
+    inset:0;
+
+    background:
+        linear-gradient(
+            to bottom,
+            #559ad4 0%,
+            #91c9ee 48%,
+            #e2e9ed 100%
+        );
+}
+
+/* Nubes */
+
+.nube{
+    position:absolute;
+
+    width:180px;
+    height:45px;
+
+    background:rgba(255,255,255,.75);
+
+    border-radius:50px;
+
+    filter:blur(1px);
+}
+
+.nube:before,
+.nube:after{
+    content:"";
+    position:absolute;
+
+    background:inherit;
+    border-radius:50%;
+}
+
+.nube:before{
+    width:75px;
+    height:75px;
+    left:30px;
+    bottom:5px;
+}
+
+.nube:after{
+    width:60px;
+    height:60px;
+    right:30px;
+    bottom:0;
+}
+
+/* Edificios lejanos */
+
+.edificiosLejanos{
+    position:absolute;
+    bottom:90px;
+    left:0;
+
+    display:flex;
+    align-items:flex-end;
+    gap:8px;
+}
+
+.edificioLejano{
+    width:130px;
+    background:#7b8794;
+    position:relative;
+}
+
+.edificioLejano:nth-child(1){height:220px}
+.edificioLejano:nth-child(2){height:310px}
+.edificioLejano:nth-child(3){height:180px}
+.edificioLejano:nth-child(4){height:270px}
+.edificioLejano:nth-child(5){height:340px}
+.edificioLejano:nth-child(6){height:220px}
+.edificioLejano:nth-child(7){height:290px}
+.edificioLejano:nth-child(8){height:190px}
+.edificioLejano:nth-child(9){height:330px}
+.edificioLejano:nth-child(10){height:240px}
+
+.ventanas{
+    position:absolute;
+    inset:15px;
+
+    background:
+        repeating-linear-gradient(
+            to right,
+            #e4c866 0 14px,
+            transparent 14px 30px
+        ),
+        repeating-linear-gradient(
+            to bottom,
+            #e4c866 0 15px,
+            transparent 15px 30px
+        );
+
+    opacity:.7;
+}
+
+/* Edificios cercanos */
+
+.edificioCercano{
+    position:absolute;
+    bottom:90px;
+
+    width:220px;
+    height:400px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #343d48,
+            #56616e,
+            #303944
+        );
+
+    box-shadow:10px 0 20px rgba(0,0,0,.2);
+}
+
+.edificioCercano .ventanas{
+    background:
+        repeating-linear-gradient(
+            to right,
+            #ffd96a 0 22px,
+            transparent 22px 45px
+        ),
+        repeating-linear-gradient(
+            to bottom,
+            #ffd96a 0 20px,
+            transparent 20px 40px
+        );
+}
+
+/* Calle */
+
+.calle{
+    position:absolute;
+    bottom:0;
+    left:0;
+
+    width:6000px;
+    height:90px;
+
+    background:#292c31;
+
+    border-top:7px solid #777;
+}
+
+.lineaCalle{
+    position:absolute;
+    top:38px;
+
+    width:6000px;
+    height:7px;
+
+    background:
+        repeating-linear-gradient(
+            to right,
+            #f6e58d 0 80px,
+            transparent 80px 150px
+        );
+}
+
+/* Árboles */
+
+.arbol{
+    position:absolute;
+    bottom:90px;
+    width:80px;
+    height:170px;
+}
+
+.arbol .tronco{
+    position:absolute;
+    bottom:0;
+    left:33px;
+
+    width:18px;
+    height:90px;
+
+    background:#5b3825;
+}
+
+.arbol .copa{
+    position:absolute;
+    top:0;
+
+    width:80px;
+    height:100px;
+
+    border-radius:50%;
+
+    background:
+        radial-gradient(circle at 30% 30%,#63a957,#2e7137 70%);
+}
+
+/* Farolas */
+
+.farola{
+    position:absolute;
+    bottom:90px;
+
+    width:12px;
+    height:190px;
+
+    background:#292929;
+}
+
+.farola:before{
+    content:"";
+    position:absolute;
+
+    width:70px;
+    height:12px;
+
+    top:0;
+    left:-2px;
+
+    border-radius:20px;
+
+    background:#292929;
+}
+
+.farola:after{
+    content:"";
+
+    position:absolute;
+
+    width:30px;
+    height:30px;
+
+    top:8px;
+    left:35px;
+
+    border-radius:50%;
+
+    background:#fff1a8;
+
+    box-shadow:0 0 25px #fff1a8;
+}
+
+/* =========================================================
+   NIVEL 2
+========================================================= */
+
+.nivel2 .cielo{
+    background:
+        linear-gradient(
+            to bottom,
+            #f08b5b,
+            #f5bd76 50%,
+            #d8c19d
+        );
+}
+
+.nivel2 .edificioCercano{
+    background:
+        linear-gradient(
+            90deg,
+            #544f55,
+            #75666c,
+            #4c484e
+        );
+}
+
+.nivel2 .calle{
+    background:#373335;
+}
+
+/* =========================================================
+   NIVEL 3
+========================================================= */
+
+.nivel3 .cielo{
+    background:
+        linear-gradient(
+            to bottom,
+            #11162d,
+            #252c52 55%,
+            #39405d
+        );
+}
+
+.nivel3 .edificioCercano{
+    background:
+        linear-gradient(
+            90deg,
+            #181b25,
+            #292e3c,
+            #141721
+        );
+}
+
+.nivel3 .ventanas{
+    background:
+        repeating-linear-gradient(
+            to right,
+            #ffd76a 0 20px,
+            transparent 20px 45px
+        ),
+        repeating-linear-gradient(
+            to bottom,
+            #ffd76a 0 20px,
+            transparent 20px 40px
+        );
+}
+
+/* =========================================================
+   SUELO
+========================================================= */
+
+.suelo{
+    position:absolute;
+
+    height:70px;
+
+    background:
+        linear-gradient(
+            to bottom,
+            #58a944 0 12px,
+            #70452c 12px 100%
+        );
+
+    border-top:4px solid #326a2b;
+
+    z-index:5;
+}
+
+/* =========================================================
+   PLATAFORMAS FIRMES
+========================================================= */
+
+.plataforma{
+    position:absolute;
+
+    height:28px;
+
+    background:
+        linear-gradient(
+            to bottom,
+            #67b64e 0 7px,
+            #765034 7px 100%
+        );
+
+    border:3px solid #3d291b;
+    border-radius:5px;
+
+    z-index:6;
+
+    box-shadow:
+        inset 0 -6px 0 rgba(0,0,0,.18),
+        0 5px 5px rgba(0,0,0,.3);
+}
+
+/* =========================================================
+   HUECOS
+========================================================= */
+
+.hueco{
+    position:absolute;
+
+    bottom:0;
+    height:70px;
+
+    background:#090b0e;
+
+    z-index:4;
+}
+
+/* =========================================================
+   OBSTÁCULOS
+========================================================= */
+
+.obstaculo{
+    position:absolute;
+
+    width:48px;
+    height:50px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #d84949,
+            #8e2020
+        );
+
+    border:4px solid #541414;
+
+    border-radius:8px;
+
+    z-index:8;
+
+    box-shadow:0 5px 8px rgba(0,0,0,.4);
+}
+
+.obstaculo:after{
+    content:"!";
+
+    position:absolute;
+
+    color:white;
+
+    font-size:30px;
+    font-weight:bold;
+
+    left:14px;
+    top:3px;
+}
+
+/* =========================================================
+   MONEDAS
+========================================================= */
+
+.moneda{
+    position:absolute;
+
+    width:31px;
+    height:31px;
+
+    border-radius:50%;
+
+    background:
+        radial-gradient(
+            circle at 30% 30%,
+            #fff5a0,
+            #ffd21c 45%,
+            #d99500
+        );
+
+    border:3px solid #b97800;
+
+    z-index:20;
+
+    animation:girar .8s infinite linear;
+
+    box-shadow:0 0 12px rgba(255,205,30,.6);
+}
+
+.moneda:after{
+    content:"$";
+
+    position:absolute;
+
+    color:#986700;
+    font-weight:bold;
+
+    left:7px;
+    top:2px;
+}
+
+/* =========================================================
+   META
+========================================================= */
+
+.meta{
+    position:absolute;
+
+    width:12px;
+    height:240px;
+
+    bottom:70px;
+
+    background:#eee;
+
+    z-index:10;
+}
+
+.meta:before{
+    content:"🏁";
+
+    position:absolute;
+
+    left:5px;
+    top:-8px;
+
+    font-size:52px;
+}
+
+/* =========================================================
+   JUGADOR
+========================================================= */
+
+#jugador{
+    position:absolute;
+
+    width:60px;
+    height:95px;
+
+    left:120px;
+    bottom:70px;
+
+    z-index:50;
+
+    transition:transform .05s;
+}
+
+#jugador.moviendose{
+    animation:caminar .18s infinite alternate;
+}
+
+/* =========================================================
+   MENSAJES
+========================================================= */
+
+#mensaje{
+    position:fixed;
+    inset:0;
+
+    z-index:4000;
+
+    display:none;
+
+    justify-content:center;
+    align-items:center;
+
+    background:rgba(0,0,0,.72);
+}
+
+.cajaMensaje{
+    width:min(90%,600px);
+
+    padding:40px;
+
+    text-align:center;
+
+    background:
+        linear-gradient(
+            135deg,
+            #241044,
+            #35145c
+        );
+
+    color:white;
+
+    border-radius:22px;
+
+    box-shadow:0 0 50px rgba(190,100,230,.4);
+
+    animation:subir .5s ease;
+}
+
+.cajaMensaje h2{
+    font-size:38px;
+    margin-bottom:15px;
+}
+
+.cajaMensaje p{
+    font-size:19px;
+    line-height:1.5;
+    margin-bottom:25px;
+}
+
+/* =========================================================
+   BOTONES
+========================================================= */
+
+.boton{
+    padding:15px 32px;
+
+    border:none;
+    border-radius:12px;
+
+    background:#b464dc;
+
+    color:white;
+
+    font-size:18px;
+    font-weight:bold;
+
+    cursor:pointer;
+
+    transition:.25s;
+}
+
+.boton:hover{
+    transform:scale(1.06);
+
+    background:#cf83ed;
+}
+
+/* =========================================================
+   CONTROLES
+========================================================= */
+
+#controles{
+    position:fixed;
+
+    bottom:15px;
+    left:15px;
+    right:15px;
+
+    z-index:2000;
+
+    display:flex;
+    justify-content:space-between;
+
+    pointer-events:none;
+}
+
+.grupoControl{
+    display:flex;
+    gap:10px;
+}
+
+.control{
+    width:65px;
+    height:65px;
+
+    border-radius:50%;
+
+    border:2px solid white;
+
+    background:rgba(0,0,0,.6);
+
+    color:white;
+
+    font-size:25px;
+
+    pointer-events:auto;
+}
+
+/* =========================================================
+   FINAL
+========================================================= */
+
+#final{
+    position:fixed;
+    inset:0;
+
+    z-index:6000;
+
+    display:none;
+
+    justify-content:center;
+    align-items:center;
+
+    text-align:center;
+
+    color:white;
+
+    background:
+        radial-gradient(
+            circle at center,
+            #5b287d,
+            #13051d 65%
+        );
+
+    animation:entradaFinal 1.2s ease;
+}
+
+.finalCaja{
+    width:min(90%,800px);
+    padding:45px;
+}
+
+.finalCaja h1{
+    font-size:clamp(40px,7vw,70px);
+
+    margin-bottom:20px;
+}
+
+.finalCaja p{
+    font-size:22px;
+    line-height:1.6;
+}
+
+/* =========================================================
+   ANIMACIONES
+========================================================= */
+
+@keyframes entradaInicio{
+    from{
+        opacity:0;
+        transform:scale(1.1);
+    }
+
+    to{
+        opacity:1;
+        transform:scale(1);
+    }
+}
+
+@keyframes entradaFinal{
+    from{
+        opacity:0;
+        transform:scale(.8);
+    }
+
+    to{
+        opacity:1;
+        transform:scale(1);
+    }
+}
+
+@keyframes subir{
+    from{
+        opacity:0;
+        transform:translateY(40px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+@keyframes girar{
+    0%{
+        transform:rotateY(0deg);
+    }
+
+    50%{
+        transform:rotateY(180deg);
+    }
+
+    100%{
+        transform:rotateY(360deg);
+    }
+}
+
+@keyframes caminar{
+    from{
+        transform:translateY(0);
+    }
+
+    to{
+        transform:translateY(-3px);
+    }
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(max-width:600px){
+
+    .personajeOpcion{
+        width:100px;
+    }
+
+    .menuInicio{
+        padding:20px;
+    }
+
+    .menuInicio p{
+        font-size:15px;
+    }
+
+    #hud{
+        font-size:13px;
+    }
+
+    .hudCaja{
+        padding:8px 10px;
+    }
+
+    .control{
+        width:58px;
+        height:58px;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+
+<!-- =====================================================
+     INICIO
+===================================================== -->
+
+<section id="inicio">
+
+<div class="menuInicio">
+
+    <h1>🎮 EL JUEGO ES PARA TODOS</h1>
+
+    <h2>Una aventura contra el bullying</h2>
+
+    <p>
+        Supera los obstáculos, recoge monedas y llega hasta
+        el final de cada ciudad.
+    </p>
+
+
+    <div id="selectorPersonaje">
+
+        <h3>ELIGE TU PERSONAJE</h3>
+
+        <div id="personajes">
+
+            <!-- PERSONAJE 1 -->
+
+            <div class="personajeOpcion seleccionado"
+                 data-personaje="claro">
+
+                <div class="personaje">
+
+                    <div class="cabeza"
+                         style="background:#f2c39b"></div>
+
+                    <div class="cabello"
+                         style="background:#24170e"></div>
+
+                    <div class="cuerpo"
+                         style="background:#3155d9"></div>
+
+                    <div class="brazo izq"
+                         style="background:#3155d9"></div>
+
+                    <div class="brazo der"
+                         style="background:#3155d9"></div>
+
+                    <div class="pierna izq"></div>
+                    <div class="pierna der"></div>
+
+                </div>
+
+                <p>Niño 1</p>
+
+            </div>
+
+
+            <!-- PERSONAJE 2 -->
+
+            <div class="personajeOpcion"
+                 data-personaje="oscuro">
+
+                <div class="personaje">
+
+                    <div class="cabeza"
+                         style="background:#70452e"></div>
+
+                    <div class="cabello"
+                         style="background:#111"></div>
+
+                    <div class="cuerpo"
+                         style="background:#d94b4b"></div>
+
+                    <div class="brazo izq"
+                         style="background:#d94b4b"></div>
+
+                    <div class="brazo der"
+                         style="background:#d94b4b"></div>
+
+                    <div class="pierna izq"></div>
+                    <div class="pierna der"></div>
+
+                </div>
+
+                <p>Niño 2</p>
+
+            </div>
+
+
+            <!-- PROFESOR -->
+
+            <div class="personajeOpcion"
+                 data-personaje="profesor">
+
+                <div class="personaje">
+
+                    <div class="cabeza"
+                         style="background:#e7b58c"></div>
+
+                    <div class="cabello"
+                         style="background:#555"></div>
+
+                    <div class="cuerpo"
+                         style="background:#444"></div>
+
+                    <div class="brazo izq"
+                         style="background:#444"></div>
+
+                    <div class="brazo der"
+                         style="background:#444"></div>
+
+                    <div class="pierna izq"></div>
+                    <div class="pierna der"></div>
+
+                </div>
+
+                <p>Profesor</p>
+
+            </div>
+
+
+            <!-- COORDINADOR -->
+
+            <div class="personajeOpcion"
+                 data-personaje="coordinador">
+
+                <div class="personaje">
+
+                    <div class="cabeza"
+                         style="background:#b9784d"></div>
+
+                    <div class="cabello"
+                         style="background:#171717"></div>
+
+                    <div class="cuerpo"
+                         style="background:#682c8e"></div>
+
+                    <div class="brazo izq"
+                         style="background:#682c8e"></div>
+
+                    <div class="brazo der"
+                         style="background:#682c8e"></div>
+
+                    <div class="pierna izq"></div>
+                    <div class="pierna der"></div>
+
+                </div>
+
+                <p>Coordinador</p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <button class="boton"
+            onclick="comenzarJuego()">
+
+        ▶ COMENZAR AVENTURA
+
+    </button>
+
+    <br><br>
+
+    <p>
+        ← → Mover &nbsp; | &nbsp;
+        ESPACIO Saltar
+    </p>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     JUEGO
+===================================================== -->
+
+<div id="juego">
+
+    <div id="hud">
+
+        <div class="hudCaja">
+
+            NIVEL <span id="numeroNivel">1</span>
+
+            <div id="barraVida">
+                <div id="vida"></div>
+            </div>
+
+        </div>
+
+
+        <div class="hudCaja">
+
+            🪙
+            <span id="contadorMonedas">
+                0
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <div id="mundo">
+
+        <!-- CIUDAD -->
+
+        <div class="ciudad">
+
+            <div class="cielo"></div>
+
+
+            <!-- NUBES -->
+
+            <div class="nube"
+                 style="left:300px;top:100px">
+            </div>
+
+            <div class="nube"
+                 style="left:900px;top:160px">
+            </div>
+
+            <div class="nube"
+                 style="left:1700px;top:90px">
+            </div>
+
+
+            <!-- EDIFICIOS LEJANOS -->
+
+            <div class="edificiosLejanos">
+
+                <div class="edificioLejano">
+                    <div class="ventanas"></div>
+                </div>
+
+                <div class="edificioLejano">
+                    <div class="ventanas"></div>
+                </div>
+
+                <div class="edificioLejano">
+                    <div class="ventanas"></div>
+                </div>
+
+                <div class="edificioLejano">
+                    <div class="ventanas"></div>
+                </div>
+
+                <div class="edificioLejano">
+                    <div class="ventanas"></div>
+                </div>
+
+                <div class="edificioLejano">
+                    <div class="ventanas"></div>
+                </div>
+
+                <div class="edificioLejano">
+                    <div class="ventanas"></div>
+                </div>
+
+                <div class="edificioLejano">
+                    <div class="ventanas"></div>
+                </div>
+
+                <div class="edificioLejano">
+                    <div class="ventanas"></div>
+                </div>
+
+                <div class="edificioLejano">
+                    <div class="ventanas"></div>
+                </div>
+
+            </div>
+
+
+            <!-- EDIFICIOS GRANDES -->
+
+            <div class="edificioCercano"
+                 style="left:500px">
+
+                <div class="ventanas"></div>
+
+            </div>
+
+            <div class="edificioCercano"
+                 style="left:1500px;height:500px">
+
+                <div class="ventanas"></div>
+
+            </div>
+
+
+            <!-- ÁRBOLES -->
+
+            <div class="arbol"
+                 style="left:300px">
+
+                <div class="copa"></div>
+                <div class="tronco"></div>
+
+            </div>
+
+
+            <div class="arbol"
+                 style="left:1200px">
+
+                <div class="copa"></div>
+                <div class="tronco"></div>
+
+            </div>
+
+
+            <!-- FAROLAS -->
+
+            <div class="farola"
+                 style="left:750px"></div>
+
+            <div class="farola"
+                 style="left:1800px"></div>
+
+
+            <!-- CALLE -->
+
+            <div class="calle">
+
+                <div class="lineaCalle"></div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             JUGADOR
+        ================================================= -->
+
+        <div id="jugador">
+
+            <div class="cabeza"></div>
+
+            <div class="cabello"></div>
+
+            <div class="cuerpo"></div>
+
+            <div class="brazo izq"></div>
+
+            <div class="brazo der"></div>
+
+            <div class="pierna izq"></div>
+
+            <div class="pierna der"></div>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- CONTROLES -->
+
+    <div id="controles">
+
+        <div class="grupoControl">
+
+            <button class="control"
+                    id="btnIzquierda">
+                ◀
+            </button>
+
+            <button class="control"
+                    id="btnDerecha">
+                ▶
+            </button>
+
+        </div>
+
+
+        <button class="control"
+                id="btnSaltar">
+            ▲
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     MENSAJE
+===================================================== -->
+
+<div id="mensaje">
+
+    <div class="cajaMensaje">
+
+        <h2 id="mensajeTitulo">
+            ¡Perdiste!
+        </h2>
+
+        <p id="mensajeTexto">
+            Vuelve a intentarlo.
+        </p>
+
+        <button class="boton"
+                onclick="reintentar()">
+
+            🔄 INTENTAR DE NUEVO
+
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     FINAL
+===================================================== -->
+
+<div id="final">
+
+    <div class="finalCaja">
+
+        <h1>🏆 ¡LO LOGRASTE!</h1>
+
+        <p>
+            Has recorrido las tres ciudades y superado
+            todos los obstáculos.
+        </p>
+
+        <br>
+
+        <p>
+            🪙 Monedas:
+            <strong id="monedasFinal">
+                0
+            </strong>
+        </p>
+
+        <br>
+
+        <p>
+            💜 El bullying no define a nadie.
+            El respeto, la empatía y la solidaridad
+            pueden cambiar una historia.
+        </p>
+
+        <br>
+
+        <p>
+            🤝 Si ves una situación de bullying,
+            no seas indiferente. Busca ayuda de un
+            profesor, coordinador o adulto de confianza.
+        </p>
+
+        <br>
+
+        <button class="boton"
+                onclick="location.reload()">
+
+            🔄 JUGAR DE NUEVO
+
+        </button>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   VARIABLES
+========================================================= */
+
+const jugador =
+document.getElementById("jugador");
+
+const mundo =
+document.getElementById("mundo");
+
+const juego =
+document.getElementById("juego");
+
+let personajeElegido="claro";
+
+let nivel=1;
+
+let x=120;
+let y=70;
+
+let velocidadX=0;
+let velocidadY=0;
+
+let gravedad=0.8;
+
+let fuerzaSalto=15;
+
+let enSuelo=false;
+
+let izquierda=false;
+let derecha=false;
+
+let jugando=false;
+
+let monedas=0;
+
+let vidas=3;
+
+let anchoMundo=5000;
+
+let ultimoNivel=1;
+
+
+/* =========================================================
+   SELECCIÓN DE PERSONAJE
+========================================================= */
+
+document
+.querySelectorAll(".personajeOpcion")
+.forEach(opcion=>{
+
+    opcion.addEventListener("click",()=>{
+
+        document
+        .querySelectorAll(".personajeOpcion")
+        .forEach(x=>
+            x.classList.remove("seleccionado")
+        );
+
+        opcion.classList.add("seleccionado");
+
+        personajeElegido=
+            opcion.dataset.personaje;
+
+    });
+
+});
+
+
+/* =========================================================
+   APLICAR APARIENCIA
+========================================================= */
+
+function aplicarPersonaje(){
+
+    const cabeza=
+        jugador.querySelector(".cabeza");
+
+    const cabello=
+        jugador.querySelector(".cabello");
+
+    const cuerpo=
+        jugador.querySelector(".cuerpo");
+
+    const brazos=
+        jugador.querySelectorAll(".brazo");
+
+
+    let piel;
+    let pelo;
+    let camisa;
+
+
+    if(personajeElegido==="claro"){
+
+        piel="#f2c39b";
+        pelo="#24170e";
+        camisa="#3155d9";
+
+    }
+
+    if(personajeElegido==="oscuro"){
+
+        piel="#70452e";
+        pelo="#111";
+        camisa="#d94b4b";
+
+    }
+
+    if(personajeElegido==="profesor"){
+
+        piel="#e7b58c";
+        pelo="#555";
+        camisa="#444";
+
+    }
+
+    if(personajeElegido==="coordinador"){
+
+        piel="#b9784d";
+        pelo="#171717";
+        camisa="#682c8e";
+
+    }
+
+
+    cabeza.style.background=piel;
+
+    cabello.style.background=pelo;
+
+    cuerpo.style.background=camisa;
+
+    brazos.forEach(b=>{
+        b.style.background=camisa;
+    });
+
+}
+
+
+/* =========================================================
+   COMENZAR
+========================================================= */
+
+function comenzarJuego(){
+
+    document
+    .getElementById("inicio")
+    .style.display="none";
+
+    juego.style.display="block";
+
+    aplicarPersonaje();
+
+    nivel=1;
+
+    monedas=0;
+
+    vidas=3;
+
+    cargarNivel();
+
+    jugando=true;
+
+    requestAnimationFrame(gameLoop);
+
+}
+
+
+/* =========================================================
+   CARGAR NIVEL
+========================================================= */
+
+function cargarNivel(){
+
+    x=120;
+
+    y=70;
+
+    velocidadX=0;
+
+    velocidadY=0;
+
+    enSuelo=false;
+
+    anchoMundo=
+        nivel===1 ? 2800 :
+        nivel===2 ? 3600 :
+        4700;
+
+
+    mundo.style.width=
+        anchoMundo+"px";
+
+
+    crearMapa();
+
+
+    jugador.style.left=x+"px";
+
+    jugador.style.bottom=y+"px";
+
+    actualizarHUD();
+
+}
+
+
+/* =========================================================
+   CREAR MAPA
+========================================================= */
+
+function crearMapa(){
+
+    /* BORRAR ELEMENTOS ANTERIORES */
+
+    document
+    .querySelectorAll(
+        ".suelo,.plataforma,.hueco,.moneda,.obstaculo,.meta"
+    )
+    .forEach(e=>e.remove());
+
+
+    /* =====================================================
+       NIVEL 1
+    ===================================================== */
+
+    if(nivel===1){
+
+        suelo(0,700);
+
+        suelo(850,800);
+
+        suelo(1850,950);
+
+
+        hueco(700,150);
+
+        hueco(1650,200);
+
+
+        plataforma(350,180,220);
+
+        plataforma(950,210,200);
+
+        plataforma(1350,300,200);
+
+        plataforma(2000,220,220);
+
+
+        moneda(250,140);
+
+        moneda(420,230);
+
+        moneda(1000,260);
+
+        moneda(1400,350);
+
+        moneda(2050,280);
+
+
+        obstaculo(580);
+
+        obstaculo(1100);
+
+        obstaculo(1500);
+
+        obstaculo(2150);
+
+
+        meta(2650);
+
+    }
+
+
+    /* =====================================================
+       NIVEL 2
+    ===================================================== */
+
+    if(nivel===2){
+
+        suelo(0,550);
+
+        suelo(700,600);
+
+        suelo(1500,500);
+
+        suelo(2200,650);
+
+        suelo(3050,550);
+
+
+        hueco(550,150);
+
+        hueco(1300,200);
+
+        hueco(2000,200);
+
+        hueco(2850,200);
+
+
+        plataforma(250,200,160);
+
+        plataforma(780,250,180);
+
+        plataforma(1150,350,170);
+
+        plataforma(1550,230,180);
+
+        plataforma(2300,280,180);
+
+        plataforma(2700,380,180);
+
+        plataforma(3150,250,200);
+
+
+        moneda(250,250);
+
+        moneda(800,300);
+
+        moneda(1180,400);
+
+        moneda(1600,280);
+
+        moneda(2350,330);
+
+        moneda(2750,430);
+
+        moneda(3200,300);
+
+
+        obstaculo(400);
+
+        obstaculo(900);
+
+        obstaculo(1200);
+
+        obstaculo(1700);
+
+        obstaculo(2450);
+
+        obstaculo(3200);
+
+
+        meta(3450);
+
+    }
+
+
+    /* =====================================================
+       NIVEL 3
+    ===================================================== */
+
+    if(nivel===3){
+
+        suelo(0,450);
+
+        suelo(600,500);
+
+        suelo(1250,450);
+
+        suelo(1850,500);
+
+        suelo(2550,550);
+
+        suelo(3300,1400);
+
+
+        hueco(450,150);
+
+        hueco(1100,150);
+
+        hueco(1700,150);
+
+        hueco(2350,200);
+
+        hueco(3100,200);
+
+
+        plataforma(200,210,140);
+
+        plataforma(680,270,150);
+
+        plataforma(900,380,150);
+
+        plataforma(1300,300,160);
+
+        plataforma(1900,250,170);
+
+        plataforma(2200,400,160);
+
+        plataforma(2600,300,170);
+
+        plataforma(3400,280,180);
+
+
+        moneda(220,260);
+
+        moneda(700,320);
+
+        moneda(930,430);
+
+        moneda(1330,350);
+
+        moneda(1930,300);
+
+        moneda(2230,450);
+
+        moneda(2630,350);
+
+        moneda(3430,330);
+
+
+        obstaculo(350);
+
+        obstaculo(780);
+
+        obstaculo(1000);
+
+        obstaculo(1450);
+
+        obstaculo(2000);
+
+        obstaculo(2700);
+
+        obstaculo(3500);
+
+
+        meta(4400);
+
+    }
+
+}
+
+
+/* =========================================================
+   CREADORES
+========================================================= */
+
+function suelo(left,width){
+
+    const e=document.createElement("div");
+
+    e.className="suelo";
+
+    e.style.left=left+"px";
+
+    e.style.bottom="0px";
+
+    e.style.width=width+"px";
+
+    mundo.appendChild(e);
+
+}
+
+
+function plataforma(left,bottom,width){
+
+    const e=document.createElement("div");
+
+    e.className="plataforma";
+
+    e.style.left=left+"px";
+
+    e.style.bottom=bottom+"px";
+
+    e.style.width=width+"px";
+
+    mundo.appendChild(e);
+
+}
+
+
+function hueco(left,width){
+
+    const e=document.createElement("div");
+
+    e.className="hueco";
+
+    e.style.left=left+"px";
+
+    e.style.width=width+"px";
+
+    mundo.appendChild(e);
+
+}
+
+
+function moneda(left,bottom){
+
+    const e=document.createElement("div");
+
+    e.className="moneda";
+
+    e.style.left=left+"px";
+
+    e.style.bottom=bottom+"px";
+
+    mundo.appendChild(e);
+
+}
+
+
+function obstaculo(left){
+
+    const e=document.createElement("div");
+
+    e.className="obstaculo";
+
+    e.style.left=left+"px";
+
+    e.style.bottom="70px";
+
+    mundo.appendChild(e);
+
+}
+
+
+function meta(left){
+
+    const e=document.createElement("div");
+
+    e.className="meta";
+
+    e.style.left=left+"px";
+
+    mundo.appendChild(e);
+
+}
+
+
+/* =========================================================
+   CONTROLES TECLADO
+========================================================= */
+
+document.addEventListener("keydown",e=>{
+
+    if(e.key==="ArrowLeft"){
+
+        izquierda=true;
+
+    }
+
+    if(e.key==="ArrowRight"){
+
+        derecha=true;
+
+    }
+
+    if(e.code==="Space"){
+
+        e.preventDefault();
+
+        saltar();
+
+    }
+
+});
+
+
+document.addEventListener("keyup",e=>{
+
+    if(e.key==="ArrowLeft"){
+
+        izquierda=false;
+
+    }
+
+    if(e.key==="ArrowRight"){
+
+        derecha=false;
+
+    }
+
+});
+
+
+/* =========================================================
+   SALTO
+========================================================= */
+
+function saltar(){
+
+    if(enSuelo && jugando){
+
+        velocidadY=fuerzaSalto;
+
+        enSuelo=false;
+
+    }
+
+}
+
+
+/* =========================================================
+   FÍSICA
+========================================================= */
+
+function actualizarFisica(){
+
+    const velocidad=
+        nivel===1 ? 6 :
+        nivel===2 ? 7 :
+        8;
+
+
+    if(derecha){
+
+        velocidadX=velocidad;
+
+    }
+    else if(izquierda){
+
+        velocidadX=-velocidad;
+
+    }
+    else{
+
+        velocidadX*=0.75;
+
+    }
+
+
+    /* MOVIMIENTO HORIZONTAL */
+
+    let nuevaX=x+velocidadX;
+
+
+    /* COLISIÓN HORIZONTAL */
+
+    if(!colisionHorizontal(nuevaX)){
+
+        x=nuevaX;
+
+    }
+    else{
+
+        velocidadX=0;
+
+    }
+
+
+    /* GRAVEDAD */
+
+    velocidadY-=gravedad;
+
+    let nuevaY=y+velocidadY;
+
+
+    /* =====================================================
+       COLISIÓN CON SUELO Y PLATAFORMAS
+    ===================================================== */
+
+    let aterrizo=false;
+
+
+    const superficies=
+        document.querySelectorAll(
+            ".suelo,.plataforma"
+        );
+
+
+    for(const superficie of superficies){
+
+        const left=
+            parseFloat(superficie.style.left);
+
+        const width=
+            superficie.offsetWidth;
+
+        const bottom=
+            parseFloat(superficie.style.bottom)||0;
+
+
+        const top=
+            window.innerHeight-bottom-
+            superficie.offsetHeight;
+
+
+        const jugadorIzq=x;
+
+        const jugadorDer=x+60;
+
+
+        const jugadorAbajo=
+            window.innerHeight-y;
+
+
+        const jugadorAbajoNuevo=
+            window.innerHeight-nuevaY;
+
+
+        /* EL JUGADOR ESTÁ CAYENDO */
+
+        if(velocidadY<=0){
+
+            if(
+                jugadorDer>left &&
+                jugadorIzq<left+width &&
+                jugadorAbajo<=top+12 &&
+                jugadorAbajoNuevo>=top
+            ){
+
+                nuevaY=
+                    window.innerHeight-top;
+
+                velocidadY=0;
+
+                aterrizo=true;
+
+                break;
+
+            }
+
+        }
+
+    }
+
+
+    if(aterrizo){
+
+        enSuelo=true;
+
+    }
+    else{
+
+        enSuelo=false;
+
+    }
+
+
+    y=nuevaY;
+
+
+    /* =====================================================
+       CAÍDA AL VACÍO
+    ===================================================== */
+
+    if(y<-180){
+
+        perderVida();
+
+        return;
+
+    }
+
+
+    /* =====================================================
+       LÍMITES
+    ===================================================== */
+
+    if(x<0){
+
+        x=0;
+
+    }
+
+    if(x>anchoMundo-100){
+
+        x=anchoMundo-100;
+
+    }
+
+
+    /* =====================================================
+       ACTUALIZAR VISUAL
+    ===================================================== */
+
+    jugador.style.left=x+"px";
+
+    jugador.style.bottom=y+"px";
+
+
+    if(
+        Math.abs(velocidadX)>1 &&
+        enSuelo
+    ){
+
+        jugador.classList.add("moviendose");
+
+    }
+    else{
+
+        jugador.classList.remove("moviendose");
+
+    }
+
+
+    /* =====================================================
+       CÁMARA
+    ===================================================== */
+
+    let camara=x-
+        window.innerWidth*.35;
+
+
+    if(camara<0){
+
+        camara=0;
+
+    }
+
+
+    const maxCamara=
+        anchoMundo-window.innerWidth;
+
+
+    if(camara>maxCamara){
+
+        camara=maxCamara;
+
+    }
+
+
+    mundo.style.left=
+        (-camara)+"px";
+
+
+    detectarObjetos();
+
+}
+
+
+/* =========================================================
+   COLISIÓN HORIZONTAL
+========================================================= */
+
+function colisionHorizontal(nuevaX){
+
+    const jugadorTop=
+        window.innerHeight-y-95;
+
+    const jugadorBottom=
+        window.innerHeight-y;
+
+    const jugadorIzq=nuevaX;
+
+    const jugadorDer=nuevaX+60;
+
+
+    const obstaculos=
+        document.querySelectorAll(
+            ".obstaculo"
+        );
+
+
+    for(const o of obstaculos){
+
+        const left=
+            parseFloat(o.style.left);
+
+        const top=
+            window.innerHeight-
+            70-
+            o.offsetHeight;
+
+        const right=
+            left+o.offsetWidth;
+
+        const bottom=
+            top+o.offsetHeight;
+
+
+        if(
+            jugadorDer>left &&
+            jugadorIzq<right &&
+            jugadorBottom>top &&
+            jugadorTop<bottom
+        ){
+
+            return true;
+
+        }
+
+    }
+
+
+    return false;
+
+}
+
+
+/* =========================================================
+   DETECTAR OBJETOS
+========================================================= */
+
+function detectarObjetos(){
+
+    const jugadorRect=
+        jugador.getBoundingClientRect();
+
+
+    /* MONEDAS */
+
+    document
+    .querySelectorAll(".moneda")
+    .forEach(m=>{
+
+        if(
+            colision(
+                jugadorRect,
+                m.getBoundingClientRect()
+            )
+        ){
+
+            m.remove();
+
+            monedas++;
+
+            actualizarHUD();
+
+        }
+
+    });
+
+
+    /* OBSTÁCULOS */
+
+    document
+    .querySelectorAll(".obstaculo")
+    .forEach(o=>{
+
+        if(
+            colision(
+                jugadorRect,
+                o.getBoundingClientRect()
+            )
+        ){
+
+            perderVida();
+
+        }
+
+    });
+
+
+    /* META */
+
+    const final=
+        document.querySelector(".meta");
+
+
+    if(final){
+
+        if(
+            colision(
+                jugadorRect,
+                final.getBoundingClientRect()
+            )
+        ){
+
+            completarNivel();
+
+        }
+
+    }
+
+}
+
+
+/* =========================================================
+   COLISIÓN RECTÁNGULOS
+========================================================= */
+
+function colision(a,b){
+
+    return(
+        a.left<b.right &&
+        a.right>b.left &&
+        a.top<b.bottom &&
+        a.bottom>b.top
+    );
+
+}
+
+
+/* =========================================================
+   PERDER VIDA
+========================================================= */
+
+let golpeando=false;
+
+
+function perderVida(){
+
+    if(golpeando || !jugando)
+        return;
+
+
+    golpeando=true;
+
+    vidas--;
+
+    actualizarHUD();
+
+
+    if(vidas<=0){
+
+        jugando=false;
+
+        mostrarMensaje(
+            "💥 ¡Perdiste!",
+            "Te quedaste sin vidas. Los obstáculos pueden ser difíciles, pero siempre puedes volver a intentarlo."
+        );
+
+    }
+    else{
+
+        x=120;
+
+        y=300;
+
+        velocidadY=0;
+
+        setTimeout(()=>{
+
+            golpeando=false;
+
+        },800);
+
+    }
+
+}
+
+
+/* =========================================================
+   REINTENTAR
+========================================================= */
+
+function reintentar(){
+
+    document
+    .getElementById("mensaje")
+    .style.display="none";
+
+
+    vidas=3;
+
+    cargarNivel();
+
+    jugando=true;
+
+}
+
+
+/* =========================================================
+   COMPLETAR NIVEL
+========================================================= */
+
+function completarNivel(){
+
+    if(!jugando)
+        return;
+
+
+    jugando=false;
+
+
+    if(nivel<3){
+
+        mostrarMensaje(
+            "🎉 ¡NIVEL SUPERADO!",
+            "Has avanzado a una nueva ciudad. Cada nivel será más difícil."
+        );
+
+
+        setTimeout(()=>{
+
+            document
+            .getElementById("mensaje")
+            .style.display="none";
+
+
+            nivel++;
+
+            actualizarFondo();
+
+            cargarNivel();
+
+            jugando=true;
+
+        },1800);
+
+    }
+    else{
+
+        terminarJuego();
+
+    }
+
+}
+
+
+/* =========================================================
+   FONDO POR NIVEL
+========================================================= */
+
+function actualizarFondo(){
+
+    juego.className="";
+
+    juego.classList.add(
+        "nivel"+nivel
+    );
+
+}
+
+
+/* =========================================================
+   MENSAJE
+========================================================= */
+
+function mostrarMensaje(titulo,texto){
+
+    document
+    .getElementById("mensajeTitulo")
+    .textContent=titulo;
+
+
+    document
+    .getElementById("mensajeTexto")
+    .textContent=texto;
+
+
+    document
+    .getElementById("mensaje")
+    .style.display="flex";
+
+}
+
+
+/* =========================================================
+   HUD
+========================================================= */
+
+function actualizarHUD(){
+
+    document
+    .getElementById("numeroNivel")
+    .textContent=nivel;
+
+
+    document
+    .getElementById("contadorMonedas")
+    .textContent=monedas;
+
+
+    document
+    .getElementById("vida")
+    .style.width=
+        ((vidas/3)*100)+"%";
+
+}
+
+
+/* =========================================================
+   FINAL
+========================================================= */
+
+function terminarJuego(){
+
+    jugando=false;
+
+    document
+    .getElementById("juego")
+    .style.display="none";
+
+
+    document
+    .getElementById("monedasFinal")
+    .textContent=monedas;
+
+
+    document
+    .getElementById("final")
+    .style.display="flex";
+
+}
+
+
+/* =========================================================
+   GAME LOOP
+========================================================= */
+
+function gameLoop(){
+
+    if(jugando){
+
+        actualizarFisica();
+
+    }
+
+    requestAnimationFrame(gameLoop);
+
+}
+
+
+/* =========================================================
+   CONTROLES CELULAR
+========================================================= */
+
+const btnIzquierda=
+document.getElementById("btnIzquierda");
+
+const btnDerecha=
+document.getElementById("btnDerecha");
+
+const btnSaltar=
+document.getElementById("btnSaltar");
+
+
+btnIzquierda.addEventListener(
+    "touchstart",
+    e=>{
+        e.preventDefault();
+        izquierda=true;
+    }
+);
+
+btnIzquierda.addEventListener(
+    "touchend",
+    e=>{
+        e.preventDefault();
+        izquierda=false;
+    }
+);
+
+
+btnDerecha.addEventListener(
+    "touchstart",
+    e=>{
+        e.preventDefault();
+        derecha=true;
+    }
+);
+
+btnDerecha.addEventListener(
+    "touchend",
+    e=>{
+        e.preventDefault();
+        derecha=false;
+    }
+);
+
+
+btnSaltar.addEventListener(
+    "touchstart",
+    e=>{
+        e.preventDefault();
+        saltar();
+    }
+);
+
+
+/* Mouse */
+
+btnIzquierda.addEventListener(
+    "mousedown",
+    ()=>{
+        izquierda=true;
+    }
+);
+
+btnIzquierda.addEventListener(
+    "mouseup",
+    ()=>{
+        izquierda=false;
+    }
+);
+
+
+btnDerecha.addEventListener(
+    "mousedown",
+    ()=>{
+        derecha=true;
+    }
+);
+
+btnDerecha.addEventListener(
+    "mouseup",
+    ()=>{
+        derecha=false;
+    }
+);
+
+
+btnSaltar.addEventListener(
+    "click",
+    ()=>{
+        saltar();
+    }
+);
+
+</script>
+
+</body>
+
+</html>

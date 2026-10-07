@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EL JUEGO ES PARA TODOS</title>
+
+    <link rel="icon" type="image/png" href="imagenes/Emblema Two.gif">
+    
+
+    <style>
+
+        body { 
+        margin: 0;
+        font-family: Arial, sans-serif;
+
+        background-color: rgb(250, 249, 249);
+
+        background-image: radial-gradient(
+            rgb(0, 0, 0) 1px,
+            transparent 1px
+        );
+
+        background-size: 20px 20px;
+        }
+
+        .titulo::after {
+        content: "";
+        display: block;
+        width: 100px;
+        height: 4px;
+        background-color: #b464dc;
+        margin: 12px auto 0;
+        border-radius: 10px;
+        transition: 0.3s;
+        }
+
+        .titulo:hover::after {
+            width: 180px;
+        }
+
+        /* Fila de navegación */
+        .menu { 
+        background-color: rgb(180, 100, 220); 
+        height: 50px; 
+        display: flex; 
+        justify-content: center; 
+        align-items: center; 
+        }
+
+        /* Fila de navegación */
+        .menu { 
+        background-color: rgb(180, 100, 220); 
+        height: 50px; 
+        display: flex; 
+        justify-content: center; 
+        align-items: center; 
+        }
+
+        .menu a {
+    position: relative;
+    color: white;
+    text-decoration: none;
+    padding: 14px 18px;
+    font-size: 16px;
+    }
+
+    /* Cuando pasas el cursor */
+    .menu a:hover {
+        background-color: #000000;
+    }
+
+    /* Estelita */
+    .menu a:hover::after {
+        content: "✦";
+        position: absolute;
+        color: white;
+        font-size: 18px;
+        right: 5px;
+        top: 3px;
+        text-shadow: 0 0 8px white;
+        animation: estelita 1s infinite alternate;
+    }
+
+    /* Animación de la estelita */
+    @keyframes estelita {
+        from {
+            transform: scale(1) rotate(0deg);
+            opacity: 1;
+        }
+
+        to {
+            transform: scale(1.3) rotate(20deg);
+            opacity: 1;
+        }
+    }.menu a {
+    position: relative;
+    color: white;
+    text-decoration: none;
+    padding: 14px 18px;
+    font-size: 16px;
+    }
+
+    /* Cuando pasas el cursor */
+    .menu a:hover {
+        background-color: #000000;
+    }
+
+    /* Estelita */
+    .menu a:hover::after {
+        content: "✦";
+        position: absolute;
+        color: white;
+        font-size: 18px;
+        right: 5px;
+        top: 3px;
+        text-shadow: 0 0 8px white;
+        animation: estelita 1s infinite alternate;
+    }
+
+    /* Animación de la estelita */
+    @keyframes estelita {
+        from {
+            transform: scale(1) rotate(0deg);
+            opacity: 1;
+        }
+
+        to {
+            transform: scale(1.3) rotate(20deg);
+            opacity: 1;
+        }
+    }
+
+        /* Encabezado rojo */
+        .encabezado {
+            background-color: #00ffdd
+            height 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .titulo {
+            color: rgb(250, 250, 250);
+            font-size: 50px;
+            font-weight: bold;
+            text-shadow: 2px 2px 5px #000000;
+
+            
+        }
+
+        .fila-texto { 
+        background-color: rgb(34, 12, 82);  
+        height: 50px; 
+        display: flex; 
+        justify-content: center; 
+        align-items: center; 
+        }
+
+        .fila-texto p { 
+         color: white; 
+        font-size: 20px; 
+        font-weight: bold; 
+        }
+        
+    </style>
+</head>
+
+<body>
+
+    <div class="menu">
+ 
+         <a href="index.HTML">Inicio</a>
+        <a href="Bullying.html">¿QUÉ ES?</a>
+        <a href="Tipos.html">TIPOS</a>
+        <a href="Prevenirlo.html">PREVENIRLO</a>
+        <a href="Buzón.html">BUZÓN</a>
+        <a href="Sugerencias.html">SUGERENCIAS</a>      
+        <a href="Sobre nosotros.html">SOBRE NOSOTROS</a>
+
+    </div>
+
+    <div class="fila-texto">
+        <p>¿Para qué hacer sentir mal a alguien?</p>
+    </div>
+    
+    <br></br>
+
+<div>
+        
+<h1 class="titulo">
+    ¿Qué es?
+</h1>
+
+<style>
+.titulo {
+    text-align: center;
+    color: #b464dc;
+    font-family: Impact, sans-serif;
+    font-size: 50px;
+    letter-spacing: 5px;
+
+    /* Sombra 3D + brillo */
+    text-shadow:
+        4px 4px 0px #310a86,
+        0 0 5px #b464dc,
+        0 0 10px #b464dc,
+        0 0 20px  rgb(20, 8, 56);
+
+
+    transition: 0.5s;
+}
+
+/* Efecto al pasar el cursor */
+.titulo:hover {
+    transform: scale(1.08);
+
+    text-shadow:
+        4px 4px 0px #1d1b20,
+        0 0 10px rgb(0, 0, 0),
+        0 0 20px rgb(12, 12, 15)
+        0 0 40px  rgb(14, 14, 17);
+;
+}
+</style>
+
+</div>
+
+    
+<!-- FILA DE LOS DOS RECUADROS -->
+<div style="
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 20px;
+    width: 100%;
+    margin-top: 20px;
+">
+
+
+    <!-- RECUADRO 1 -->
+    <div style="
+        width: 250px;
+        border: 2px solid black;
+        padding: 60px;
+        text-align: center;
+        background-color: white;
+    ">
+
+        <p style="font-size: 20px;">
+            El bullying o acoso escolar es el maltrato físico, verbal o psicológico que ocurre de forma repetida e intencional contra una persona que tiene menos poder o está en una situación vulnerabl
+        </p>
+
+    </div>
+
+
+    <!-- RECUADRO 2 -->
+    <div style="
+        width: 250px;
+        border: 2px solid black;
+        padding: 55px;
+        text-align: center;
+        background-color: white;
+    ">
+
+        <br>
+         ✅ Características principales:
+        </br>
+
+        <br>
+        🔁 Repetitivo: ocurre varias veces.
+        </br>
+
+        <br>
+        ⚖️ Hay desigualdad de poder: Quien agrede tiene más fuerza, apoyo social o influencia.
+        </br>
+
+        <br>
+        🎯 Intencional: el daño se realiza a propósito.
+        </br>
+
+    </div>
+    
+    <img src="imagenes/Emblema Two.gif" 
+    width="120" 
+    style="position: absolute; top: 50px; right: 10px;">
+
+</div>
+
+<br></br>
+
+ <!-- FILA DEBAJO DE LOS RECUADROS -->
+    <table width="100%" style="
+    background-color: rgb(34, 12, 82);
+    padding: 10px;
+    ">
+
+
+        <tr>
+<br></br>
+
+            <!-- INSTAGRAM -->
+            <td align="center">
+
+                <a href="https://www.instagram.com/"
+                   target="_blank"
+                   style="color: white; text-decoration: none;">
+
+                    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png"
+                         width="50"
+                         height="50"
+                         alt="Instagram">
+
+                    Instagram
+
+                </a>
+
+            </td>
+
+            <!-- DERECHOS -->
+<td align="center">
+
+    <footer class="footer">
+
+        <div class="footer-contenido">
+
+            <h2>EL JUEGO ES PARA TODOS</h2>
+
+            <p>
+                Proyecto educativo para prevenir y combatir el bullying.
+            </p>
+
+            <p>
+                I.E. Dinamarca
+            </p>
+
+            <div class="footer-linea"></div>
+
+            <p class="copyright">
+                © 2026 EL JUEGO ES PARA TODOS
+            </p>
+
+        </div>
+
+    </footer>
+
+</td>
+             </a>
+
+            </td>
+
+
+            <!-- YOUTUBE -->
+            <td align="center">
+
+                <a href="https://www.youtube.com/"
+                   target="_blank"
+                   style="color: white; text-decoration: none;">
+
+                    <img src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png"
+                         width="50"
+                         height="50"
+                         alt="YouTube">
+
+                    YouTube
+
+                </a>
+
+            </td>
+
+                </footer>
+
+            </div>
+            
+        </td>
+
+        </tr>
+
+    </table>
+
+</body>
+
+</html>
